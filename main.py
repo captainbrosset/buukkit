@@ -15,9 +15,9 @@ class MainHandler(webapp.RequestHandler):
 		images = get_bukkit_images()
 		out = ""
 		for i in images:
-			out += "<a href='http://bukk.it/" + i[0] + "' style='float:left;display:block;margin:10px;text-align:center;font-size:10px;'>\
-				<img src='http://bukk.it/" + i[0] + "' / style='width:150px'>\
-				<br />http://bukk.it/" + i[0] + "\
+			out += "<a href='http://bukk.it/" + i + "' style='float:left;display:block;margin:10px;text-align:center;font-size:10px;'>\
+				<img src='http://bukk.it/" + i + "' / style='width:150px'>\
+				<br />http://bukk.it/" + i + "\
 			</a>"
 		self.response.out.write(out)
 
