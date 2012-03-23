@@ -1,12 +1,18 @@
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import util
 import urllib2
 import re
+import os
+
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp import util
+from google.appengine.ext.webapp import template
+
+def get_bukkit_images():
+		content = urllib2.urlopen("http://bukk.it").read()
+		return re.findall('<td><a href="(.*?)">(?:.*?)</a>', content, re.DOTALL)
 
 class MainHandler(webapp.RequestHandler):
 	def get(self):
-		content = urllib2.urlopen("http://bukk.it").read()
-		images = re.findall('<td><a href="(.*?)">(.*?)</a>', content, re.DOTALL)
+		images = get_bukkit_images()
 		out = ""
 		for i in images:
 			out += "<a href='http://bukk.it/" + i[0] + "' style='float:left;display:block;margin:10px;text-align:center;font-size:10px;'>\
@@ -15,8 +21,18 @@ class MainHandler(webapp.RequestHandler):
 			</a>"
 		self.response.out.write(out)
 
+class SearchHandler(webapp.RequestHandler):
+	def get(self):
+		images = get_bukkit_images()
+		path = os.path.join(os.path.dirname(__file__), 'search.html')
+
+		self.response.out.write(template.render(path, {"images": images}))
+
 def main():
-	application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
+	application = webapp.WSGIApplication([
+		('/search', SearchHandler),
+		('/.*', MainHandler)
+	], debug=True)
 	util.run_wsgi_app(application)
 
 if __name__ == '__main__':
