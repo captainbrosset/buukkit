@@ -26,7 +26,7 @@
 			$("#name").autocomplete({
 				source: {{ images }},
 				select: function(event, ui) {
-					$("#image").html("<img src='http://bukk.it/" + ui.item.value + "' />");
+					$("#image").html("<a href='http://bukk.it/" + ui.item.value + "'><img src='http://bukk.it/" + ui.item.value + "' /></a>");
 				}
 			});
 		</script>

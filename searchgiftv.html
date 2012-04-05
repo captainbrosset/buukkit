@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Buukkit giftv search</title>
+        <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css" rel="Stylesheet" />
+        <link type="text/css" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="Stylesheet" />
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <style>
+            body {
+                text-align: center;
+                padding: 2em;
+            }
+            #image img {
+                margin: 2em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="ui-widget">
+            <input id="name" type="text" />
+        </div>
+        <div id="image"></div>
+        <script>
+            $("#name").autocomplete({
+                source: {{ images }},
+                select: function(event, ui) {
+                    $("#image").html("<a href='/images/giftv/" + ui.item.value + "'><img src='/images/giftv/" + ui.item.value + "' /></a>");
+                }
+            });
+        </script>
+    </body>
+</html>
