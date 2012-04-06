@@ -2,12 +2,12 @@ import urllib2
 import re
 import logging
 import random
-import json
 from urlparse import urlparse
 import os
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
+from django.utils import simplejson
 
 import model
 
@@ -31,7 +31,7 @@ def respond_image(db_image, response):
 
 
 def respond_json(response, request, data):
-    json_data = json.dumps(data)
+    json_data = simplejson.dumps(data)
     if request.get('cb'):
         json_data = request.get('cb') + "(" + json_data + ");"
 
@@ -112,7 +112,7 @@ class SearchThroughImagesAsHtmlHandler(webapp.RequestHandler):
             image_list.append(image.file_name)
 
         path = os.path.join(os.path.dirname(__file__), '..', 'search.html')
-        self.response.out.write(template.render(path, {"images": json.dumps(image_list)}))
+        self.response.out.write(template.render(path, {"images": simplejson.dumps(image_list)}))
 
 
 class StealBukitImages(webapp.RequestHandler):

@@ -1,11 +1,3 @@
-import urllib2
-import urlparse
-import re
-import os
-import random
-import json
-import logging
-
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
@@ -33,9 +25,9 @@ class HelpHandler(webapp.RequestHandler):
         <a href="/html/viewall">/html/viewall</a>           Returns an HTML page containing all images (this may freeze your browser)
         <a href="/html/search">/html/search</a>            Returns an HTML page containing a search engine for images
 
-        <a href="/json/random?cb=callback">/json/random</a>            Returns a jsonp response for a random image (pass ?cb= for a jsonp response)
-        <a href="/json/search/cat?cb=callback">/json/search?q=</a>         Returns a jsonp response for a list of images matching the search query string (pass ?cb= for a jsonp response)
-        <a href="/json/list?cb=callback">/json/list</a>              Returns a jsonp response for the complete list of images (pass ?cb= for a jsonp response)
+        <a href="/json/random?cb=callback">/json/random</a>            Returns a json response for a random image (pass ?cb= for a jsonp response)
+        <a href="/json/search/cat?cb=callback">/json/search/(.*)</a>         Returns a json response for a list of images matching the search query string (pass ?cb= for a jsonp response)
+        <a href="/json/list?cb=callback">/json/list</a>              Returns a json response for the complete list of images (pass ?cb= for a jsonp response)
         </pre>
         """)
 
