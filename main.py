@@ -26,7 +26,7 @@ class HelpHandler(webapp.RequestHandler):
         <a href="/html/search">/html/search</a>            Returns an HTML page containing a search engine for images
 
         <a href="/json/random?cb=callback">/json/random</a>            Returns a json response for a random image (pass ?cb= for a jsonp response)
-        <a href="/json/search/cat?cb=callback">/json/search/(.*)</a>         Returns a json response for a list of images matching the search query string (pass ?cb= for a jsonp response)
+        <a href="/json/search/cat?cb=callback">/json/search/(.*)</a>       Returns a json response for a list of images matching the search query string (pass ?cb= for a jsonp response)
         <a href="/json/list?cb=callback">/json/list</a>              Returns a json response for the complete list of images (pass ?cb= for a jsonp response)
         </pre>
         """)
