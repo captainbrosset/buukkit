@@ -10,6 +10,7 @@ from google.appengine.ext.webapp import template
 from django.utils import simplejson
 
 import model
+import crawler
 
 
 def get_img_root_url(request):
@@ -134,7 +135,7 @@ class StealBukitImages(webapp.RequestHandler):
             i += 1
             if i > 10:
                 break
-        self.response.out.write("done ... stole 10 images")
+        self.response.out.write("done ... downloaded 10 images on bukkit")
 
 
 class StealGifTvImages(webapp.RequestHandler):
@@ -160,4 +161,28 @@ class StealGifTvImages(webapp.RequestHandler):
 
             model.store_image(image_url, simple_file_name)
 
-        self.response.out.write("done ... stole 10 images")
+        self.response.out.write("done ... downloaded 10 images on giftv")
+
+
+class StealMemeBaseImages(webapp.RequestHandler):
+    def on_page_found(self, msg):
+        images = re.findall("(http://chzmemebase.files.wordpress.com/[0-9]+/[0-9]+/internet-memes-([a-zA-Z\-]+)\.(jpg|png|gif))", msg)
+        for image in images:
+            logging.info("     ~~~ Found image: " + image[1] + "." + image[2] + " (on " + image[0][0:50] + "...)")
+            model.store_image(image[0], image[1] + "." + image[2])
+
+    def get(self):
+        crawler.crawl("http://memebase.com/", self.on_page_found, 10)
+        self.response.out.write("done ... crawled 10 pages on memebase")
+
+
+class StealMemeBaseAfterDarkImages(webapp.RequestHandler):
+    def on_page_found(self, msg):
+        images = re.findall("(http://chzmemeafterdark.files.wordpress.com/[0-9]+/[0-9]+/naughty-memes-([a-zA-Z\-]+)\.(jpg|png|gif))", msg)
+        for image in images:
+            logging.info("     ~~~ Found image: " + image[1] + "." + image[2] + " (on " + image[0][0:50] + "...)")
+            model.store_image(image[0], image[1] + "." + image[2])
+
+    def get(self):
+        crawler.crawl("http://memebaseafterdark.com/", self.on_page_found, 10)
+        self.response.out.write("done ... crawled 10 pages on memebase afterdark")
