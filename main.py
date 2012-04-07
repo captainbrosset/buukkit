@@ -17,6 +17,7 @@ class HelpHandler(webapp.RequestHandler):
                U   ||     ||
                   (_|    (_|
 
+
         <a href="/img/random">/img/random</a>.............Returns a random image
         <a href="/img/random.gif">/img/random.gif</a>.........Returns a random image
         <a href="/img/wakewhenicare.gif">/img/(.*)</a>...............Returns an image, given its file name
@@ -28,6 +29,9 @@ class HelpHandler(webapp.RequestHandler):
         <a href="/json/random?cb=callback">/json/random</a>............Returns a json response for a random image (pass ?cb= for a jsonp response)
         <a href="/json/search/cat?cb=callback">/json/search/(.*)</a>.......Returns a json response for a list of images matching the search query string (pass ?cb= for a jsonp response)
         <a href="/json/list?cb=callback">/json/list</a>..............Returns a json response for the complete list of images (pass ?cb= for a jsonp response)
+        
+
+        <img src="/img/random" />
         </pre>
         """)
 
@@ -57,7 +61,7 @@ def main():
         ('/html/viewall', handler.DisplayAllImagesAsHtmlHandler),
         ('/html/search', handler.SearchThroughImagesAsHtmlHandler),
 
-        ('/img/random\.gif', handler.GetRandomImageHandler),
+        ('/img/random\.(?:gif|jpg|png)', handler.GetRandomImageHandler),
         ('/img/random', handler.GetRandomImageHandler),
         ('/img/(.*)', handler.GetImageHandler),
 
