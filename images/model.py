@@ -21,8 +21,12 @@ def store_image(image_url, simple_file_name):
             image.file_name = simple_file_name
             image.rand_num = random.random()
             image.put()
+
+            return True
         except:
-            pass
+            return False
+    else:
+        return False
 
 def get_image(file_name):
     result = db.GqlQuery("SELECT * FROM Image WHERE file_name = :1 LIMIT 1", file_name).fetch(1)

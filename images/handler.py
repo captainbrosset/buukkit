@@ -39,6 +39,11 @@ def respond_json(response, request, data):
     response.out.write(json_data)
 
 
+def respond_template(response, template_name, data):
+    path = os.path.join(os.path.dirname(__file__), '..', 'templates',  template_name)
+    response.out.write(template.render(path, data))
+
+
 class GetImageHandler(webapp.RequestHandler):
     def get(self, file_name):
         image = model.get_image(file_name)
@@ -80,8 +85,7 @@ class GetImageSearchListAsJsonHandler(webapp.RequestHandler):
 
 class GetListOfImagesAsHtmlHandler(webapp.RequestHandler):
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), '..', 'list.html')
-        self.response.out.write(template.render(path, {"images": model.get_all_images()}))
+        respond_template(self.response, 'list.html', {"images": model.get_all_images()})
 
 
 class GetListOfImagesAsJsonHandler(webapp.RequestHandler):
@@ -100,8 +104,7 @@ class GetListOfImagesAsJsonHandler(webapp.RequestHandler):
 
 class DisplayAllImagesAsHtmlHandler(webapp.RequestHandler):
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), '..', 'view.html')
-        self.response.out.write(template.render(path, {"images": model.get_all_images()}))
+        respond_template(self.response, 'view.html', {"images": model.get_all_images()})
 
 
 class SearchThroughImagesAsHtmlHandler(webapp.RequestHandler):
@@ -112,8 +115,7 @@ class SearchThroughImagesAsHtmlHandler(webapp.RequestHandler):
         for image in images:
             image_list.append(image.file_name)
 
-        path = os.path.join(os.path.dirname(__file__), '..', 'search.html')
-        self.response.out.write(template.render(path, {"images": simplejson.dumps(image_list)}))
+        respond_template(self.response, 'search.html', {"images": simplejson.dumps(image_list)})
 
 
 class StealBukitImages(webapp.RequestHandler):
@@ -162,6 +164,18 @@ class StealGifTvImages(webapp.RequestHandler):
             model.store_image(image_url, simple_file_name)
 
         self.response.out.write("done ... downloaded 10 images on giftv")
+
+
+class UploadSingleImage(webapp.RequestHandler):
+    def get(self):
+        respond_template(self.response, 'add_single.html', {})
+
+    def post(self):
+        is_done = model.store_image(self.request.get("url"), self.request.get("file_name"))
+        if is_done:
+            self.response.out.write("Image " + self.request.get("file_name") + " added ! (from: " + self.request.get("url") + ").<br /><img src='/img/" + self.request.get("file_name") + "' /><br /><a href='/__/upload'>Add an other image</a>")
+        else:
+            self.response.out.write("Sorry, could not add image. Either there's already an image with the same name or the image couldn't be uploaded (probably more than 1Mb).<br /><a href='/__/upload'>Try again</a>")
 
 
 class StealMemeBaseImages(webapp.RequestHandler):

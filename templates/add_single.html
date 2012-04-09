@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>upload an image</title>
+    </head>
+    <body>
+        <form action="" method="post">
+            <p>
+                <label for="url">url of the image</label>
+                <br />
+                <input type="text" name="url" id="url" />
+            </p>
+            <p>
+                <label for="file_name">file name (note that this is used as the unique identifier for the image, so it must be unique, and should be descriptive of the image itself as it is also used when searching for images)</label>
+                <br />
+                <input disabled="disabled" type="text" name="file_name" id="file_name" />
+            </p>
+            <p>
+                <img id="preview" src="" />
+            <p>
+                <label>Verify image and file name and then</label>
+                <button disabled="disabled" id="submit">Upload</button>
+            </p>
+        </form>
+        <script>
+            var url = document.getElementById("url");
+            var fileName = document.getElementById("file_name");
+            var preview = document.getElementById("preview");
+            var submit = document.getElementById("submit");
+
+            url.onchange = function() {
+                if(this.value !== "" && this.value.substring(0, 4) === "http") {
+                    var extractedFileName = this.value.substring(this.value.lastIndexOf("/") + 1);
+                    fileName.value = extractedFileName;
+                    fileName.disabled = false;
+                    preview.src = this.value;
+                    submit.disabled = false;
+                }
+            }
+        </script>
+    </body>
+</html>

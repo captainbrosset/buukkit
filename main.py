@@ -2,17 +2,19 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
 from images import handler
+from images import model
 
 
 class HelpHandler(webapp.RequestHandler):
     def get(self):
+        nb_images = model.get_all_images().count()
         self.response.out.write("""
         <pre>
                        .--.
                       (    )
              ,   ,         |
              |\_/|_________|
-             |+ +          o
+             |+ +          o  ... """ + str(nb_images) + """ images and counting ...
              |_^_|-||_____||
                U   ||     ||
                   (_|    (_|
@@ -40,10 +42,14 @@ class ThiefHelpHandler(webapp.RequestHandler):
     def get(self):
         self.response.out.write("""
         <pre>
+
           _._     _,-'""`-._
          (,-.`._,'(       |\`-/|
              `-.-' \ )-`( , o o)
                    `-    \`_`"'-
+
+
+        <a href="/__/upload">Upload a single image</a>
 
 
         <a href="/__/steal/giftv">steal some more giftv images</a>
@@ -73,7 +79,8 @@ def main():
         ('/__/steal/giftv', handler.StealGifTvImages),
         ('/__/steal/mb', handler.StealMemeBaseImages),
         ('/__/steal/mbad', handler.StealMemeBaseAfterDarkImages),
-        ('/__/steal', ThiefHelpHandler),
+        ('/__', ThiefHelpHandler),
+        ('/__/upload', handler.UploadSingleImage),
 
         ('.*', HelpHandler)
 
