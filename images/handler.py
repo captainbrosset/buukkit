@@ -19,9 +19,13 @@ def get_img_root_url(request):
 
 
 def respond_image(db_image, response):
+    file_name = db_image.file_name
+    extension = file_name[file_name.rfind(".")+1:]
+
     content_types = {
         "gif": "image/gif",
         "jpg": "image/jpeg",
+        "jpeg": "image/jpeg",
         "png": "image/png"
     }
 
@@ -200,3 +204,9 @@ class StealMemeBaseAfterDarkImages(webapp.RequestHandler):
     def get(self):
         crawler.crawl("http://memebaseafterdark.com/", self.on_page_found, 10)
         self.response.out.write("done ... crawled 10 pages on memebase afterdark")
+
+
+class DeleteImage(webapp.RequestHandler):
+    def get(self):
+        model.delete_image(self.request.get("file_name"))
+        self.response.out.write("should be done")

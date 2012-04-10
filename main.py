@@ -9,12 +9,14 @@ class HelpHandler(webapp.RequestHandler):
     def get(self):
         nb_images = model.get_all_images().count()
         self.response.out.write("""
+        <!DOCTYPE html>
+        <html>
         <pre>
                        .--.
                       (    )
              ,   ,         |
              |\_/|_________|
-             |+ +          o  ... """ + str(nb_images) + """ images and counting ...
+             |<span id="eye2">+</span> <span id="eye">+</span>          o  ... """ + str(nb_images) + """ images and counting ...
              |_^_|-||_____||
                U   ||     ||
                   (_|    (_|
@@ -35,6 +37,16 @@ class HelpHandler(webapp.RequestHandler):
 
         <img src="/img/random" />
         </pre>
+        <script>
+          // don't look at this ....
+
+          var eye = document.getElementById('eye');
+          var eye2 = document.getElementById('eye2');
+          function close() {eye.innerHTML = "-";eye2.innerHTML = "-";setTimeout(open, 150)}
+          function open() {eye.innerHTML = "+";eye2.innerHTML = "+";setTimeout(close, Math.random()*7000);}
+          setTimeout(close, 1000);
+        </script>
+        </html>
         """)
 
 
@@ -81,6 +93,7 @@ def main():
         ('/__/steal/mbad', handler.StealMemeBaseAfterDarkImages),
         ('/__', ThiefHelpHandler),
         ('/__/upload', handler.UploadSingleImage),
+        ('/__/delete', handler.DeleteImage),
 
         ('.*', HelpHandler)
 

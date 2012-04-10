@@ -8,6 +8,11 @@ from google.appengine.ext import db
 class Image(db.Model):
     file_name = db.StringProperty()
     content = db.BlobProperty(default=None)
+    #rand_num = db.FloatProperty()
+
+
+class ImageInfo(db.Model):
+    file_name = db.StringProperty()
     rand_num = db.FloatProperty()
 
 
@@ -19,8 +24,13 @@ def store_image(image_url, simple_file_name):
             image = Image()
             image.content = db.Blob(urlfetch.Fetch(image_url).content)
             image.file_name = simple_file_name
-            image.rand_num = random.random()
+            #image.rand_num = random.random()
             image.put()
+
+            image_info = ImageInfo()
+            image_info.file_name = simple_file_name
+            image_info.rand_num = random.random()
+            image_info.put()
 
             return True
         except:
@@ -35,15 +45,15 @@ def get_image(file_name):
     else:
         return None
 
-def get_all_images():
-    return db.GqlQuery("SELECT * FROM Image")
-
 def get_random_image():
     rand_num = random.random()
-    image = Image.all().order('rand_num').filter('rand_num >=', rand_num).get()
+    image = ImageInfo.all().order('rand_num').filter('rand_num >=', rand_num).get()
     if image is None:
-        image = Image.all().order('rand_num').get()
-    return image
+        image = ImageInfo.all().order('rand_num').get()
+    return get_image(image.file_name)
+
+def get_all_images():
+    return db.GqlQuery("SELECT * FROM ImageInfo")
 
 def get_image_search_list(query_string):
     images = get_all_images()
@@ -52,3 +62,9 @@ def get_image_search_list(query_string):
         if image.file_name.find(query_string) != -1:
             matching_images.append(image)
     return matching_images
+
+def delete_image(file_name):
+    result = db.GqlQuery("SELECT * FROM Image WHERE file_name = :1 LIMIT 1", file_name).fetch(1)
+    if (len(result) > 0):
+        result[0].delete()
+        db.GqlQuery("SELECT * FROM ImageInfo WHERE file_name = :1 LIMIT 1", file_name).fetch(1)[0].delete()
