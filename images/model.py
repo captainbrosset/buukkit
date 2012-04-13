@@ -45,12 +45,15 @@ def get_image(file_name):
     else:
         return None
 
-def get_random_image():
+def get_random_image_name():
     rand_num = random.random()
     image = ImageInfo.all().order('rand_num').filter('rand_num >=', rand_num).get()
     if image is None:
         image = ImageInfo.all().order('rand_num').get()
-    return get_image(image.file_name)
+    return image.file_name    
+
+def get_random_image():
+    return get_image(get_random_image_name())
 
 def get_all_images():
     return db.GqlQuery("SELECT * FROM ImageInfo")

@@ -18,7 +18,7 @@ def get_img_root_url(request):
     return o.scheme + "://" + o.netloc + "/img/"
 
 
-def respond_image(db_image, response):
+def respond_image(db_image, response, short_time_to_live=False):
     file_name = db_image.file_name
     extension = file_name[file_name.rfind(".")+1:]
 
@@ -29,8 +29,12 @@ def respond_image(db_image, response):
         "png": "image/png"
     }
 
-    response.headers["Expires"] = "Thu, 01 Dec 1994 16:00:00 GMT"
-    response.headers["Content-Type"] = content_types[db_image.file_name[-3:]]
+    if short_time_to_live:
+        response.headers["Expires"] = "Thu, 01 Dec 1994 16:00:00 GMT"
+    else:
+        response.headers["Expires"] = "Thu, 01 Dec 2094 16:00:00 GMT"
+        
+    response.headers["Content-Type"] = content_types[extension]
     response.headers["X-image-name"] = db_image.file_name
     response.out.write(db_image.content)
 
@@ -60,7 +64,7 @@ class GetImageHandler(webapp.RequestHandler):
 class GetRandomImageHandler(webapp.RequestHandler):
     def get(self):
         image = model.get_random_image()
-        respond_image(image, self.response)
+        respond_image(image, self.response, True)
 
 
 class GetRandomImageAsJsonHandler(webapp.RequestHandler):

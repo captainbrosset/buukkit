@@ -8,6 +8,8 @@ from images import model
 class HelpHandler(webapp.RequestHandler):
     def get(self):
         nb_images = model.get_all_images().count()
+        image_name = model.get_random_image_name()
+
         self.response.out.write("""
         <!DOCTYPE html>
         <html>
@@ -35,15 +37,15 @@ class HelpHandler(webapp.RequestHandler):
         <a href="/json/list?cb=callback">/json/list</a>..............Returns a json response for the complete list of images (pass ?cb= for a jsonp response)
         
 
-        <img src="/img/random" />
+        <img src="/img/""" + image_name + """" />
+        <a href="/img/""" + image_name + """">""" + handler.get_img_root_url(self.request) + image_name + """</a>
         </pre>
         <script>
           // don't look at this ....
 
           var eye = document.getElementById('eye');
-          var eye2 = document.getElementById('eye2');
-          function close() {eye.innerHTML = "-";eye2.innerHTML = "-";setTimeout(open, 150)}
-          function open() {eye.innerHTML = "+";eye2.innerHTML = "+";setTimeout(close, Math.random()*7000);}
+          function close() {eye.innerHTML = "-";setTimeout(open, 150)}
+          function open() {eye.innerHTML = "+";setTimeout(close, Math.random()*7000);}
           setTimeout(close, 1000);
         </script>
         </html>
