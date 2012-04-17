@@ -11,7 +11,7 @@ from images import model
 class HelpHandler(webapp.RequestHandler):
     def get(self):
         try:
-            nb_images = model.get_all_images().count()
+            nb_images = len(model.get_all_images())
             image_name = model.get_random_image_name()
 
             self.response.out.write("""

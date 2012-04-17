@@ -19,7 +19,7 @@ def get_img_root_url(request):
 
 
 def respond_image(db_image, response, short_time_to_live=False):
-    file_name = db_image.file_name
+    file_name = db_image.key().name()
     extension = file_name[file_name.rfind(".")+1:]
 
     content_types = {
@@ -35,7 +35,7 @@ def respond_image(db_image, response, short_time_to_live=False):
         response.headers["Expires"] = "Thu, 01 Dec 2094 16:00:00 GMT"
         
     response.headers["Content-Type"] = content_types[extension]
-    response.headers["X-image-name"] = db_image.file_name
+    response.headers["X-image-name"] = file_name
     response.out.write(db_image.content)
 
 
@@ -70,7 +70,7 @@ class GetRandomImageHandler(webapp.RequestHandler):
 class GetRandomImageAsJsonHandler(webapp.RequestHandler):
     def get(self):
         data = {
-            "imagePath": get_img_root_url(self.request) + model.get_random_image().file_name
+            "imagePath": get_img_root_url(self.request) + model.get_random_image().key().name()
         }
 
         respond_json(self.response, self.request, data)
@@ -86,7 +86,7 @@ class GetImageSearchListAsJsonHandler(webapp.RequestHandler):
         }
 
         for image in images:
-            data["images"].append(get_img_root_url(self.request) + image.file_name)
+            data["images"].append(get_img_root_url(self.request) + image)
 
         respond_json(self.response, self.request, data)
 
@@ -105,7 +105,7 @@ class GetListOfImagesAsJsonHandler(webapp.RequestHandler):
         }
 
         for image in images:
-            data["images"].append(get_img_root_url(self.request) + image.file_name)
+            data["images"].append(get_img_root_url(self.request) + image)
 
         respond_json(self.response, self.request, data)
 
@@ -121,7 +121,7 @@ class SearchThroughImagesAsHtmlHandler(webapp.RequestHandler):
 
         image_list = []
         for image in images:
-            image_list.append(image.file_name)
+            image_list.append(image)
 
         respond_template(self.response, 'search.html', {"images": simplejson.dumps(image_list)})
 
@@ -186,6 +186,7 @@ class UploadSingleImage(webapp.RequestHandler):
             self.response.out.write("Sorry, could not add image. Either there's already an image with the same name or the image couldn't be uploaded (probably more than 1Mb).<br /><a href='/__/upload'>Try again</a>")
 
 
+"""
 class StealMemeBaseImages(webapp.RequestHandler):
     def on_page_found(self, msg):
         images = re.findall("(http://chzmemebase.files.wordpress.com/[0-9]+/[0-9]+/internet-memes-([a-zA-Z\-]+)\.(jpg|png|gif))", msg)
@@ -208,7 +209,7 @@ class StealMemeBaseAfterDarkImages(webapp.RequestHandler):
     def get(self):
         crawler.crawl("http://memebaseafterdark.com/", self.on_page_found, 10)
         self.response.out.write("done ... crawled 10 pages on memebase afterdark")
-
+"""
 
 class DeleteImage(webapp.RequestHandler):
     def get(self):
