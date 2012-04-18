@@ -77,6 +77,7 @@ def delete_image(file_name):
     if info:
         info.delete()
         Image.get_by_key_name(file_name).delete()
+        set_image_keys_in_memcache()
         return True
     else:
         return False
