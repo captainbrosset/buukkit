@@ -6,6 +6,7 @@ from google.appengine.runtime import apiproxy_errors
 
 from images import handler
 from images import model
+from twitter import TweetRandomImage
 
 
 class HelpHandler(webapp.RequestHandler):
@@ -99,6 +100,8 @@ def main():
         ('/__', ThiefHelpHandler),
         ('/__/upload', handler.UploadSingleImage),
         ('/__/delete', handler.DeleteImage),
+
+        ('/tweet', TweetRandomImage),
 
         ('.*', HelpHandler)
 

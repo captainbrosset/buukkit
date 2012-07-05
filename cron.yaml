@@ -1,0 +1,4 @@
+cron:
+- description: tweet daily random gif
+  url: /tweet
+  schedule: every day 15:00
