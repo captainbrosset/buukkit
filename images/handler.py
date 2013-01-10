@@ -32,7 +32,7 @@ def respond_image(db_image, response, short_time_to_live=False):
     if short_time_to_live:
         response.headers["Expires"] = "Thu, 01 Dec 1994 16:00:00 GMT"
     else:
-        response.headers["Expires"] = "Thu, 01 Dec 2094 16:00:00 GMT"
+        response.headers["Expires"] = "Thu, 01 Dec 2504 16:00:00 GMT"
         
     response.headers["Content-Type"] = content_types[extension]
     response.headers["X-image-name"] = file_name
@@ -148,12 +148,24 @@ class StealBukitImages(webapp.RequestHandler):
         self.response.out.write("done ... downloaded 10 images on bukkit")
 
 
+class UploadSingleImage(webapp.RequestHandler):
+    def get(self):
+        respond_template(self.response, 'add_single.html', {})
+
+    def post(self):
+        is_done = model.store_image(self.request.get("url"), self.request.get("file_name"))
+        if is_done:
+            self.response.out.write("Image " + self.request.get("file_name") + " added ! (from: " + self.request.get("url") + ").<br /><img src='/img/" + self.request.get("file_name") + "' /><br /><a href='/__/upload'>Add an other image</a>")
+        else:
+            self.response.out.write("Sorry, could not add image. Either there's already an image with the same name or the image couldn't be uploaded (probably more than 1Mb).<br /><a href='/__/upload'>Try again</a>")
+
+
+"""
 class StealGifTvImages(webapp.RequestHandler):
     def get(self):
-        """
+        
         To avoid doing long requests, just download the 10 first ones. Anyway this will be cron'd as well.
         And on top of this, giftv always answers with different images
-        """
 
         nb = 0
         domain = "http://www.gif.tv/gifs/"
@@ -174,19 +186,6 @@ class StealGifTvImages(webapp.RequestHandler):
         self.response.out.write("done ... downloaded 10 images on giftv")
 
 
-class UploadSingleImage(webapp.RequestHandler):
-    def get(self):
-        respond_template(self.response, 'add_single.html', {})
-
-    def post(self):
-        is_done = model.store_image(self.request.get("url"), self.request.get("file_name"))
-        if is_done:
-            self.response.out.write("Image " + self.request.get("file_name") + " added ! (from: " + self.request.get("url") + ").<br /><img src='/img/" + self.request.get("file_name") + "' /><br /><a href='/__/upload'>Add an other image</a>")
-        else:
-            self.response.out.write("Sorry, could not add image. Either there's already an image with the same name or the image couldn't be uploaded (probably more than 1Mb).<br /><a href='/__/upload'>Try again</a>")
-
-
-"""
 class StealMemeBaseImages(webapp.RequestHandler):
     def on_page_found(self, msg):
         images = re.findall("(http://chzmemebase.files.wordpress.com/[0-9]+/[0-9]+/internet-memes-([a-zA-Z\-]+)\.(jpg|png|gif))", msg)

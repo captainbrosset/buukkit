@@ -38,12 +38,13 @@ def store_image(image_url, simple_file_name):
 IMAGE_KEY_LIST_MEMCACHE = "image_key_list"
 
 def set_image_keys_in_memcache():
+    memcache.flush_all()
     image_key_list = []
     query = ImageInfo.all(keys_only=True)
     for result in query:
         if result.name() is not None:
             image_key_list.append(result.name())
-    memcache.set(IMAGE_KEY_LIST_MEMCACHE, image_key_list)
+    memcache.replace(IMAGE_KEY_LIST_MEMCACHE, image_key_list)
     return image_key_list
 
 def get_image_keys_from_memcache():

@@ -72,8 +72,6 @@ class ThiefHelpHandler(webapp.RequestHandler):
 
         <a href="/__/upload">Upload a single image</a>
 
-
-        <a href="/__/steal/giftv">steal some more giftv images</a>
         <a href="/__/steal/bukit">steal some more bukkit images</a>
         </pre>
         """)
@@ -95,7 +93,7 @@ def main():
         ('/json/list', handler.GetListOfImagesAsJsonHandler),
 
         ('/__/steal/bukit', handler.StealBukitImages),
-        ('/__/steal/giftv', handler.StealGifTvImages),
+        #('/__/steal/giftv', handler.StealGifTvImages),
         #('/__/steal/mb', handler.StealMemeBaseImages),
         #('/__/steal/mbad', handler.StealMemeBaseAfterDarkImages),
         ('/__', ThiefHelpHandler),
