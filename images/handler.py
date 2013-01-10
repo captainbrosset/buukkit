@@ -5,6 +5,7 @@ import random
 from urlparse import urlparse
 import os
 
+from google.appengine.runtime import apiproxy_errors
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from django.utils import simplejson
@@ -50,6 +51,37 @@ def respond_json(response, request, data):
 def respond_template(response, template_name, data):
     path = os.path.join(os.path.dirname(__file__), '..', 'templates',  template_name)
     response.out.write(template.render(path, data))
+
+
+class HelpHandler(webapp.RequestHandler):
+    def get(self):
+        try:
+            nb_images = len(model.get_all_images())
+            image_name = model.get_random_image_name()
+            image_url = get_img_root_url(self.request) + image_name
+            
+            respond_template(self.response, 'home.html', {"image_url": image_url, "nb_images": str(nb_images)})
+        except apiproxy_errors.OverQuotaError, message:
+            logging.error(message)
+            self.redirect("/static/oops.html")
+
+
+class ThiefHelpHandler(webapp.RequestHandler):
+    def get(self):
+        self.response.out.write("""
+        <pre>
+
+          _._     _,-'""`-._
+         (,-.`._,'(       |\`-/|
+             `-.-' \ )-`( , o o)
+                   `-    \`_`"'-
+
+
+        <a href="/__/upload">Upload a single image</a>
+
+        <a href="/__/steal/bukit">steal some more bukkit images</a>
+        </pre>
+        """)
 
 
 class GetImageHandler(webapp.RequestHandler):

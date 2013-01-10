@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>buukkit</title>
+    <style>
+      .img-container {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+      }
+      .img-container:after {
+        top: 0; left: 0;
+        bottom: 0; right: 0;
+        position: absolute;
+        background: rgba(0, 0, 0, .4);
+        display: none;
+        content: "";
+        z-index: 1000;
+      }
+      .zeroclipboard-is-hover:after {
+        display: block;
+      }
+
+      .copied-message {
+        color: red;
+        font-weight: bold;
+        opacity: 0;
+
+        transition: opacity .5s;
+        -moz-transition: opacity .5s;
+        -webkit-transition: opacity .5s;
+        -o-transition: opacity .5s;
+      }
+      .copied-message.shown {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <pre>
+                 .--.
+                (    )
+       ,   ,         |
+       |\_/|_________|
+       |+ <span id="eye">+</span>          o  ... {{ nb_images }} images and counting ...
+       |_^_|-||_____||
+         U   ||     ||
+            (_|    (_|
+
+    <a href="https://twitter.com/buukkit">@buukkit</a>
+
+    <a href="/img/random">/img/random</a>.............Returns a random image
+    <a href="/img/random.gif">/img/random.gif</a>.........Returns a random image
+    <a href="/img/wakewhenicare.gif">/img/(.*)</a>...............Returns an image, given its file name
+
+    <a href="/html/list">/hmtl/list</a>..............Returns an HTML page containing the list of all image names
+    <a href="/html/viewall">/html/viewall</a>...........Returns an HTML page containing all images (this may freeze your browser)
+    <a href="/html/search">/html/search</a>............Returns an HTML page containing a search engine for images
+
+    <a href="/json/random?cb=callback">/json/random</a>............Returns a json response for a random image (pass ?cb= for a jsonp response)
+    <a href="/json/search/cat?cb=callback">/json/search/(.*)</a>.......Returns a json response for a list of images matching the search query string (pass ?cb= for a jsonp response)
+    <a href="/json/list?cb=callback">/json/list</a>..............Returns a json response for the complete list of images (pass ?cb= for a jsonp response)
+
+    <div id="theImage" class="img-container" data-clipboard-text="{{ image_url }}"><img class="random-image" src="{{ image_url }}" /></div>
+    <div class="copy-mask">Click to copy</div>
+    <span class="copied-message">Copied!</span>
+    </pre>
+    
+    <script src="/static/ZeroClipboard.min.js"></script>
+    <script>
+    ZeroClipboard.setDefaults({moviePath: '/static/ZeroClipboard.swf'});
+    var clip = new ZeroClipboard(document.getElementById("theImage"));
+
+    clip.on('complete', function(client, args) {
+      document.querySelector("a").focus();
+    });
+
+    clip.on('complete', function(client, args) {
+      var element = document.querySelector(".copied-message");
+      element.className = "copied-message shown";
+      setTimeout(function() {
+        element.className = "copied-message";
+      }, 2000);
+    });
+
+    var eye = document.getElementById('eye');
+    function close() {eye.innerHTML = "-";setTimeout(open, 150)}
+    function open() {eye.innerHTML = "+";setTimeout(close, Math.random()*7000);}
+    setTimeout(close, 1000);
+    </script>
+    </body>
+    </html>
