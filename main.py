@@ -28,6 +28,7 @@ class HelpHandler(webapp.RequestHandler):
          U   ||     ||
             (_|    (_|
 
+    <a href="https://twitter.com/buukkit">@buukkit</a>
 
     <a href="/img/random">/img/random</a>.............Returns a random image
     <a href="/img/random.gif">/img/random.gif</a>.........Returns a random image
