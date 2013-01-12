@@ -17,7 +17,19 @@
         content: "";
         z-index: 1000;
       }
-      .zeroclipboard-is-hover:after {
+      .img-container:before {
+        top: 0; left: 0;
+        bottom: 0; right: 0;
+        position: absolute;
+        display: none;
+        content: "click to copy address";
+        z-index: 1001;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        padding-top: 1em;
+      }
+      .zeroclipboard-is-hover:after, .zeroclipboard-is-hover:before {
         display: block;
       }
 
@@ -62,7 +74,6 @@
     <a href="/json/list?cb=callback">/json/list</a>..............Returns a json response for the complete list of images (pass ?cb= for a jsonp response)
 
     <div id="theImage" class="img-container" data-clipboard-text="{{ image_url }}"><img class="random-image" src="{{ image_url }}" /></div>
-    <div class="copy-mask">Click to copy</div>
     <span class="copied-message">Copied!</span>
     </pre>
     
@@ -70,10 +81,6 @@
     <script>
     ZeroClipboard.setDefaults({moviePath: '/static/ZeroClipboard.swf'});
     var clip = new ZeroClipboard(document.getElementById("theImage"));
-
-    clip.on('complete', function(client, args) {
-      document.querySelector("a").focus();
-    });
 
     clip.on('complete', function(client, args) {
       var element = document.querySelector(".copied-message");

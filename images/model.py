@@ -44,7 +44,7 @@ def set_image_keys_in_memcache():
     for result in query:
         if result.name() is not None:
             image_key_list.append(result.name())
-    memcache.replace(IMAGE_KEY_LIST_MEMCACHE, image_key_list)
+    memcache.set(IMAGE_KEY_LIST_MEMCACHE, image_key_list)
     return image_key_list
 
 def get_image_keys_from_memcache():
