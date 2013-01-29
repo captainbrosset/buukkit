@@ -36,7 +36,11 @@ def respond_image(db_image, response, short_time_to_live=False):
         response.headers["Expires"] = "Thu, 01 Dec 2504 16:00:00 GMT"
         
     response.headers["Content-Type"] = content_types[extension]
-    response.headers["X-image-name"] = file_name
+
+    # Cache-Control
+    # public means the cached version can be saved by proxies and other intermediate servers, where everyone can see it
+    response.headers["Cache-Control"] = "public, max-age: 31536000" # 1 year in second (about infinity on Internet Time)
+    response.headers["X-Image-Name"] = file_name
     response.out.write(db_image.content)
 
 
