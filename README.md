@@ -1,1 +1,1 @@
-http://buukkit.appspot.com/
+http://omgifs.appspot.com/
