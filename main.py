@@ -16,6 +16,7 @@ def main():
 
         ('/img/random\.(?:gif|jpg|png)', handler.GetRandomImageHandler),
         ('/img/random', handler.GetRandomImageHandler),
+        ('/img/search/([^.]+)\.(?:gif|jpg|png)', handler.SearchImageHandler),
         ('/img/(.*)', handler.GetImageHandler),
 
         ('/json/random', handler.GetRandomImageAsJsonHandler),

@@ -88,6 +88,15 @@ class ThiefHelpHandler(webapp.RequestHandler):
         """)
 
 
+class SearchImageHandler(webapp.RequestHandler):
+    def get(self, query_string):
+        images = model.get_image_search_list(query_string)
+        if len(images) > 0:
+            respond_image(model.get_image(images[0]), self.response)
+        else:
+            self.redirect("/static/notfound.jpg")
+
+
 class GetImageHandler(webapp.RequestHandler):
     def get(self, file_name):
         image = model.get_image(file_name)
